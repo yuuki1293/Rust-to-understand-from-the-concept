@@ -1,5 +1,6 @@
 fn main() {
-    let mut x = 1;
-    x = x + 1;
-    println!("x = {}", x);
+    let s = "Hello".to_string();
+    let t = s;
+    println!("{}", t);
+    println!("{}", s);
 }
