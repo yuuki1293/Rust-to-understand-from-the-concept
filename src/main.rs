@@ -7,8 +7,10 @@ fn main() {
     println!("s= {}", s);
 
     let s_ref = &mut s;
-    let s_ref2 = &mut s;
-
     myclear(s_ref);
+    println!("s= {}", s);
+
+    let s_ref2 = &mut s;
+    myclear(s_ref2);
     println!("s= {}", s);
 }
