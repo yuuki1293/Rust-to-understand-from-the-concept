@@ -1,17 +1,9 @@
-fn add_i32(x: i32, y: i32) -> i32{
-    x + y
+mod module_hello {
+    pub fn print_hello(){
+        println!("Hello");
+    }
 }
 
-#[test]
-fn test1(){
-    assert_eq!(add_i32(1, 2), 3); //成功
-}
-
-#[test]
-fn test2(){
-    assert_eq!(add_i32(2, 4), 7); //失敗
-}
-
-fn main() {
-    println!("{}", add_i32(2, 5));
+fn main(){
+    module_hello::print_hello();
 }
