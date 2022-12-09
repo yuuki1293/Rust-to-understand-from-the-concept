@@ -1,5 +1,5 @@
-mod module_hello;
-
-fn main(){
-    module_hello::print_hello();
+fn main() {
+    let mut x = 1;
+    x = x + 1;
+    println!("x = {}", x);
 }
