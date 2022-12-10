@@ -1,3 +1,7 @@
+use std::{
+    fs::File,
+    io::{BufRead, BufReader},
+};
 use thiserror::Error;
 
 #[derive(Error, Debug)]
@@ -18,17 +22,17 @@ fn mydiv(x: i32, y: i32) -> Result<i32, DivError> {
     }
 }
 
-fn print_mydiv(x: i32, y: i32) {
-    let ret = mydiv(x, y);
-    if ret.is_ok() {
-        println!("no error. ans = {}", ret.unwrap());
-    } else {
-        println!("{}", ret.err().unwrap());
-    }
-}
+fn main() -> Result<(), Box<dyn std::error::Error>> {
+    let f = File::open("./input.txt")?;
+    let f = BufReader::new(f);
 
-fn main() {
-    print_mydiv(5, 2);
-    print_mydiv(-5, 0);
-    print_mydiv(-5, -2);
+    for line in f.lines().flatten() {
+        let mut v = Vec::new();
+        for ee in line.split(' ') {
+            v.push(ee.parse()?);
+        }
+        let result = mydiv(v[0], v[1])?;
+        println!("{} / {} = {}", v[0], v[1], result);
+    }
+    Ok(())
 }
