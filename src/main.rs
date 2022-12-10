@@ -19,9 +19,11 @@ fn mydiv(x: i32, y: i32) -> Result<i32, DivError> {
 }
 
 fn print_mydiv(x: i32, y: i32) {
-    match mydiv(x, y) {
-        Ok(ans) => println!("no error. ans = {}", ans),
-        Err(e) => println!("{}", e),
+    let ret = mydiv(x, y);
+    if ret.is_ok() {
+        println!("no error. ans = {}", ret.unwrap());
+    } else {
+        println!("{}", ret.err().unwrap());
     }
 }
 
