@@ -17,3 +17,13 @@ impl Person {
         self.age += incr;
     }
 }
+
+fn main() {
+    let mut taro = Person::new(String::from("taro"), 10);
+
+    let age_plus1 = taro.age_incr(1);
+    println!("{}", age_plus1);
+
+    taro.age_incr_replace(10);
+    println!("{}", taro.age);
+}
