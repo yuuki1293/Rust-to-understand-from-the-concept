@@ -1,4 +1,4 @@
-fn pick2(x: &[i32], y: &[i32], end: usize) -> (&[i32], &[i32]) {
+fn pick2<'a, 'b>(x: &'a[i32], y: &'b[i32], end: usize) -> (&'a[i32], &'b[i32]) {
     (&x[..end], &y[..end])
 }
 
