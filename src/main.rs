@@ -1,7 +1,6 @@
-fn func_ex_print_some<T: std::fmt::Display>(ans: Option<T>) {
-    if let Some(x) = ans {
-        println!("{}", x)
-    } else {
-        println!("None")
+fn func_ex_print_some_match<T: std::fmt::Display>(ans: Option<T>) {
+    match ans {
+        Some(x) => println!("{}", x),
+        None => println!("None"),
     }
 }
