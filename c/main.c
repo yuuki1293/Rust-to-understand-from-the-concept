@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 
 struct DataA
 {
@@ -12,9 +13,10 @@ struct DataB
 
 void setdata(struct DataA *data_a, struct DataB *data_b, int value)
 {
-    int number = value + 10;
-    data_a->number_a = &number;
-    data_b->number_b = &number;
+    int* number_ptr = (int *)malloc(sizeof(int));
+    *number_ptr=value+10;
+    data_a->number_a = number_ptr;
+    data_b->number_b = number_ptr;
 }
 
 int main()
