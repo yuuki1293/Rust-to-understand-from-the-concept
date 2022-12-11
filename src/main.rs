@@ -1,24 +1,12 @@
-use std::cell::RefCell;
-use std::rc::{Rc, Weak};
-
-#[allow(dead_code)]
-struct Node{
-    data: i32,
-    child: Option<Weak<RefCell<Node>>>,
+fn return_input<T>(x: T) -> T {
+    x
 }
 
-fn main(){
-    loop {
-        let node1 = Rc::new(RefCell::new(Node {
-            data: 1,
-            child: None,
-        }));
-        let node2 = Rc::new(RefCell::new(Node {
-            data: 2,
-            child: None,
-        }));
-
-        node1.borrow_mut().child = Some(Rc::downgrade(&node2));
-        node2.borrow_mut().child = Some(Rc::downgrade(&node1));
-    }
+fn main() {
+    let x1 = return_input(1); // x1はi32型
+    let x2 = return_input(String::from("Hello World")); // x2はString型
+    let x3 = return_input::<f64>(2.0); // x3はf64型
+    println!("x1: {}", x1);
+    println!("x2: {}", x2);
+    println!("x3: {}", x3);
 }
