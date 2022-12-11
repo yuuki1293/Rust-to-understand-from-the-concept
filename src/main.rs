@@ -1,35 +1,39 @@
 use std::rc::Rc;
 
-struct DataA {
-    number_a: Option<Rc<i32>>,
+struct Node {
+    data: i32,
+    child: Option<Rc<Node>>,
 }
 
-struct DataB {
-    number_b: Option<Rc<i32>>,
-}
-
-fn setdata(data_a: &mut DataA, data_b: &mut DataB, value: i32) {
-    let number = Rc::new(value * 10);
-    data_a.number_a = Some(Rc::clone(&number));
-    data_b.number_b = Some(Rc::clone(&number));
+fn print_link(start_node: Rc<Node>) {
+    let mut p = start_node;
+    loop {
+        println!("{}", p.data);
+        if p.child.is_none() {
+            break;
+        }
+        p = Rc::clone(p.child.as_ref().unwrap());
+    }
 }
 
 fn main() {
-    let mut data_a_1 = DataA { number_a: None };
-    let mut data_b_1 = DataB { number_b: None };
-    let mut data_a_2 = DataA { number_a: None };
-    let mut data_b_2 = DataB { number_b: None };
+    let node3 = Rc::new(Node {
+        data: 3,
+        child: None,
+    });
 
-    setdata(&mut data_a_1, &mut data_b_1, 1);
-    setdata(&mut data_a_2, &mut data_b_2, 2);
-    println!(
-        "to be 11, 11: {}, {}",
-        data_a_1.number_a.unwrap(),
-        data_b_1.number_b.unwrap()
-    );
-    println!(
-        "to b3 12, 12: {}, {}",
-        data_a_2.number_a.unwrap(),
-        data_b_2.number_b.unwrap()
-    );
+    let node1 = Rc::new(Node {
+        data: 1,
+        child: Some(Rc::clone(&node3)),
+    });
+    let node2 = Rc::new(Node {
+        data: 2,
+        child: Some(Rc::clone(&node3)),
+    });
+
+    println!("link from node1");
+    print_link(Rc::clone(&node1));
+
+    println!("link from node2");
+    print_link(Rc::clone(&node2));
 }
