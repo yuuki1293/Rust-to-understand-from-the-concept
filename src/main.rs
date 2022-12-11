@@ -1,10 +1,10 @@
 use std::cell::RefCell;
-use std::rc::Rc;
+use std::rc::{Rc, Weak};
 
 #[allow(dead_code)]
 struct Node{
     data: i32,
-    child: Option<Rc<RefCell<Node>>>,
+    child: Option<Weak<RefCell<Node>>>,
 }
 
 fn main(){
@@ -18,7 +18,7 @@ fn main(){
             child: None,
         }));
 
-        node1.borrow_mut().child = Some(Rc::clone(&node2));
-        node2.borrow_mut().child = Some(Rc::clone(&node1));
+        node1.borrow_mut().child = Some(Rc::downgrade(&node2));
+        node2.borrow_mut().child = Some(Rc::downgrade(&node1));
     }
 }
