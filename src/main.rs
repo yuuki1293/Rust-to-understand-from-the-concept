@@ -1,20 +1,30 @@
-struct GenEx<T> {
-    value: T,
+struct Rectangle {
+    width: f64,
+    height: f64
 }
 
-impl<T> GenEx<T> {
-    fn return_value(self) -> T {
-        self.value
+impl Rectangle {
+    fn calc_area(&self) -> f64 {
+        self.width * self.height
     }
 }
 
+struct RightTriangle {
+    width: f64,
+    height: f64
+}
+
+impl RightTriangle {
+    fn calc_area(&self) -> f64{
+        self.width * self.height * 0.5
+    }
+}
+
+fn area(x: &Rectangle)->f64{
+    x.calc_area()
+}
+
 fn main() {
-    let x1 = GenEx { value: 1 }; // x1はGenEx<i32>型と推論
-    let x2 = GenEx {
-        value: String::from("Hello"),
-    }; // x2はGenEx<String>型と推論
-    let x3 = GenEx::<f64> { value: 3.0 }; // 型パラメータを指定することもできる
-    println!("x1: {}", x1.return_value());
-    println!("x2: {}", x2.return_value());
-    println!("x3: {}", x3.return_value());
+    let rect = Rectangle{width: 1.0, height: 2.0};
+    println!("{}", area(&rect));
 }
