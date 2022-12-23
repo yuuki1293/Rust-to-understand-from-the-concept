@@ -20,7 +20,7 @@ impl RightTriangle {
     }
 }
 
-fn area(x: &Rectangle)->f64{
+fn area<T>(x: &T)->f64{
     x.calc_area()
 }
 
