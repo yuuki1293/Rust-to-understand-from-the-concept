@@ -50,6 +50,27 @@ impl CalcLength for RightTriangle {
     }
 }
 
+fn area<T: CalcArea>(x: &T) -> f64 {
+    x.calc_area()
+}
+
 fn length<T: CalcLength>(x: &T) -> f64 {
     x.calc_length()
+}
+
+fn main() {
+    let rect = Rectangle {
+        width: 1.0,
+        height: 2.0,
+    };
+    println!("rect area={}", area(&rect));
+    println!("rect length={}", length(&rect));
+
+    let tria = RightTriangle{width:1.0,height:2.0};
+    println!("tria area={}", area(&tria));
+    println!("tria length={}",length(&tria));
+
+    let line=Line{length: 5.0};
+    println!("line length={}", length(&line));
+    // println!("line area={}", area(&line));
 }
