@@ -33,5 +33,11 @@ fn main() {
         width: 1.0,
         height: 2.0,
     };
-    println!("{}", area(&rect));
+    println!("rect area={}", area(&rect));
+
+    let tria = RightTriangle {
+        width: 1.0,
+        height: 2.0,
+    };
+    println!("tria area={}", area(&tria));
 }
