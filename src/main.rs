@@ -2,6 +2,20 @@ trait CalcArea {
     fn calc_area(&self) -> f64;
 }
 
+trait CalcLength {
+    fn calc_length(&self) -> f64;
+}
+
+struct Line {
+    length: f64,
+}
+
+impl CalcLength for Line {
+    fn calc_length(&self) -> f64 {
+        self.length
+    }
+}
+
 struct Rectangle {
     width: f64,
     height: f64,
@@ -10,6 +24,12 @@ struct Rectangle {
 impl CalcArea for Rectangle {
     fn calc_area(&self) -> f64 {
         self.width * self.height
+    }
+}
+
+impl CalcLength for Rectangle {
+    fn calc_length(&self) -> f64 {
+        (self.width + self.height) * 2.0
     }
 }
 
@@ -24,20 +44,12 @@ impl CalcArea for RightTriangle {
     }
 }
 
-fn area<T: CalcArea>(x: &T) -> f64 {
-    x.calc_area()
+impl CalcLength for RightTriangle {
+    fn calc_length(&self) -> f64 {
+        self.width + self.height + (self.width.powi(2) + self.height.powi(2)).sqrt()
+    }
 }
 
-fn main() {
-    let rect = Rectangle {
-        width: 1.0,
-        height: 2.0,
-    };
-    println!("rect area={}", area(&rect));
-
-    let tria = RightTriangle {
-        width: 1.0,
-        height: 2.0,
-    };
-    println!("tria area={}", area(&tria));
+fn length<T: CalcLength>(x: &T) -> f64 {
+    x.calc_length()
 }
