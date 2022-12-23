@@ -7,7 +7,7 @@ struct Rectangle {
     height: f64,
 }
 
-impl Rectangle {
+impl CalcArea for Rectangle {
     fn calc_area(&self) -> f64 {
         self.width * self.height
     }
@@ -18,7 +18,7 @@ struct RightTriangle {
     height: f64,
 }
 
-impl RightTriangle {
+impl CalcArea for RightTriangle {
     fn calc_area(&self) -> f64 {
         self.width * self.height * 0.5
     }
