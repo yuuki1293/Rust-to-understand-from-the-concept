@@ -24,7 +24,7 @@ impl CalcArea for RightTriangle {
     }
 }
 
-fn area<T>(x: &T) -> f64 {
+fn area<T: CalcArea>(x: &T) -> f64 {
     x.calc_area()
 }
 
