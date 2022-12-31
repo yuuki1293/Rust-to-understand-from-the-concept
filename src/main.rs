@@ -1,76 +1,63 @@
-trait CalcArea {
-    fn calc_area(&self) -> f64;
+use std::cmp::Ordering;
+use std::cmp::PartialEq;
+use std::ops::Add;
+
+#[derive(Debug, Clone, Copy)]
+// 2次元空間上の点を表す構造体
+struct Point2d {
+    x: f64,
+    y: f64,
 }
 
-trait CalcLength {
-    fn calc_length(&self) -> f64;
-}
-
-struct Line {
-    length: f64,
-}
-
-impl CalcLength for Line {
-    fn calc_length(&self) -> f64 {
-        self.length
+impl Point2d {
+    fn distance_sq(&self) -> f64 {
+        self.x.powi(2) + self.y.powi(2)
     }
 }
 
-struct Rectangle {
-    width: f64,
-    height: f64,
-}
+impl Add for Point2d {
+    type Output = Self;
 
-impl CalcArea for Rectangle {
-    fn calc_area(&self) -> f64 {
-        self.width * self.height
+    fn add(self, rhs: Self) -> <Self as Add>::Output {
+        // 成分ごとに加えて、新しいインスタンスを返す
+        Self {
+            x: self.x + rhs.x,
+            y: self.y + rhs.y,
+        }
     }
 }
 
-impl CalcLength for Rectangle {
-    fn calc_length(&self) -> f64 {
-        (self.width + self.height) * 2.0
+impl PartialEq for Point2d {
+    fn eq(&self, other: &Self) -> bool {
+        // distance_eqの大小を、Point2dの大小とする
+        let dist_self_sq = self.distance_sq();
+        let dist_other_sq = other.distance_sq();
+        dist_self_sq.eq(&dist_other_sq)
     }
 }
 
-struct RightTriangle {
-    width: f64,
-    height: f64,
-}
+impl PartialOrd for Point2d {
+    fn partial_cmp(&self, other: &Self) -> Option<Ordering> {
+        // distance_eqの大小を、Point2dの大小とする
+        let dist_self_sq = self.distance_sq();
+        let dist_other_sq = other.distance_sq();
 
-impl CalcArea for RightTriangle {
-    fn calc_area(&self) -> f64 {
-        self.width * self.height * 0.5
+        // f64型に帰着すれば、既存のf64に対するpartial_cmpが使える
+        dist_self_sq.partial_cmp(&dist_other_sq)
     }
-}
-
-impl CalcLength for RightTriangle {
-    fn calc_length(&self) -> f64 {
-        self.width + self.height + (self.width.powi(2) + self.height.powi(2)).sqrt()
-    }
-}
-
-fn area<T: CalcArea>(x: &T) -> f64 {
-    x.calc_area()
-}
-
-fn length<T: CalcLength>(x: &T) -> f64 {
-    x.calc_length()
 }
 
 fn main() {
-    let rect = Rectangle {
-        width: 1.0,
-        height: 2.0,
-    };
-    println!("rect area={}", area(&rect));
-    println!("rect length={}", length(&rect));
+    let x = Point2d { x: 3.0, y: 4.0 };
+    let y = Point2d { x: 6.0, y: 8.0 };
+    let z = Point2d { x: 4.0, y: 3.0 };
 
-    let tria = RightTriangle{width:1.0,height:2.0};
-    println!("tria area={}", area(&tria));
-    println!("tria length={}",length(&tria));
+    // Point2dに対しても+が使える
+    println!("x + y : {:?}", x + y);
 
-    let line=Line{length: 5.0};
-    println!("line length={}", length(&line));
-    // println!("line area={}", area(&line));
+    // Point2dに対しても<, =, >で大小比較がきでる
+    println!("x > y? : {}", x > y);
+
+    // 成分が異なっても原点からの距離が等しければ、等しいとみなされる
+    println!("x == z? : {}", x == z);
 }
