@@ -1,8 +1,7 @@
-fn generic_return_type<T: std::fmt::Display>(x: T) -> T {
-    x
-}
+use std::fmt::Display;
 
-fn main() {
-    println!("{}", generic_return_type(1));
-    println!("{}", generic_return_type("Hello"));
+impl<T: ?Sized + Display> Display for &T {
+    fn fmt(&self, f: &mut Formatter<'_>) -> Result<(), std::fmt::Error> {
+        Display::fmt(&**self, f)
+    }
 }
