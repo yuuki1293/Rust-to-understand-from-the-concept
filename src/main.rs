@@ -41,6 +41,27 @@ fn say_thankyou_general<T: SayThankyou>(speaker: &T) {
     speaker.say_thankyou();
 }
 
+trait Run {
+    fn run(&self);
+}
+
+impl Run for EnglishPerson {
+    fn run(&self) {
+        println!("Run");
+    }
+}
+
+impl Run for SpanishPerson {
+    fn run(&self) {
+        println!("Correr");
+    }
+}
+
+fn say_thankyou_and_run<T: SayThankyou + Run>(person: &T) {
+    person.say_thankyou();
+    person.run();
+}
+
 fn main() {
     let en = EnglishPerson;
     let sp = SpanishPerson;
@@ -50,4 +71,7 @@ fn main() {
 
     say_thankyou_general(&en);
     say_thankyou_general(&sp);
+
+    say_thankyou_and_run(&en);
+    say_thankyou_and_run(&sp);
 }
