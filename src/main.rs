@@ -1,77 +1,35 @@
-trait SayHello {
-    fn say_hello(&self);
-}
+trait MyError: std::fmt::Debug {}
 
-trait SayThankyou {
-    fn say_thankyou(&self);
-}
+#[derive(Debug)]
+struct MyError1;
+impl MyError for MyError1 {}
 
-struct EnglishPerson;
-struct SpanishPerson;
+#[derive(Debug)]
+struct MyError2;
+impl MyError for MyError2 {}
 
-impl SayHello for EnglishPerson {
-    fn say_hello(&self) {
-        println!("Hello");
+#[derive(Debug)]
+struct MyError3;
+impl MyError for MyError3 {}
+
+#[derive(Debug)]
+struct MyErrorOther;
+impl MyError for MyErrorOther {}
+
+fn div4(x: i32) -> Result<(), Box<dyn MyError>> {
+    let res = x % 4;
+    match res {
+        0 => Ok(()),
+        1 => Err(Box::new(MyError1 {})),
+        2 => Err(Box::new(MyError2 {})),
+        3 => Err(Box::new(MyError3 {})),
+        _ => Err(Box::new(MyErrorOther {})),
     }
-}
-
-impl SayThankyou for EnglishPerson {
-    fn say_thankyou(&self) {
-        println!("Thank you");
-    }
-}
-
-impl SayHello for SpanishPerson {
-    fn say_hello(&self) {
-        println!("Hola");
-    }
-}
-
-impl SayThankyou for SpanishPerson {
-    fn say_thankyou(&self) {
-        println!("Gracias");
-    }
-}
-
-fn say_hello_general<T: SayHello>(speaker: &T) {
-    speaker.say_hello();
-}
-
-fn say_thankyou_general<T: SayThankyou>(speaker: &T) {
-    speaker.say_thankyou();
-}
-
-trait Run {
-    fn run(&self);
-}
-
-impl Run for EnglishPerson {
-    fn run(&self) {
-        println!("Run");
-    }
-}
-
-impl Run for SpanishPerson {
-    fn run(&self) {
-        println!("Correr");
-    }
-}
-
-fn say_thankyou_and_run<T: SayThankyou + Run>(person: &T) {
-    person.say_thankyou();
-    person.run();
 }
 
 fn main() {
-    let en = EnglishPerson;
-    let sp = SpanishPerson;
-
-    say_hello_general(&en);
-    say_thankyou_general(&sp);
-
-    say_thankyou_general(&en);
-    say_thankyou_general(&sp);
-
-    say_thankyou_and_run(&en);
-    say_thankyou_and_run(&sp);
+    println!("{:?}", div4(0));
+    println!("{:?}", div4(1));
+    println!("{:?}", div4(2));
+    println!("{:?}", div4(3));
 }
