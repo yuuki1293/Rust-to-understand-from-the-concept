@@ -1,15 +1,12 @@
 use std::fs::File;
-use std::io::{self, BufRead, BufReader};
+use std::io;
+
+mod line_read;
 
 fn main() -> io::Result<()> {
     let f = File::open("input.txt")?;
-    let f = BufReader::new(f);
 
-    let mut lines_vec = Vec::new();
-
-    for ll in f.lines() {
-        lines_vec.push(ll.unwrap());
-    }
+    let lines_vec = line_read::get_lines(f);
 
     println!("{:?}", lines_vec);
     Ok(())
