@@ -1,26 +1,16 @@
 use std::fs::File;
-use std::io::Read;
+use std::io::{self, BufRead, BufReader};
 
-const BUFSIZE: usize = 1024;
+fn main() -> io::Result<()> {
+    let f = File::open("input.txt")?;
+    let f = BufReader::new(f);
 
-fn main() -> std::io::Result<()> {
-    let mut f = File::open("input.txt")?;
+    let mut lines_vec = Vec::new();
 
-    let mut lines = Vec::new();
-    let mut linebuf = String::new();
-
-    let mut buf = Vec::new();
-    let read_size = f.read(&mut buf)?;
-
-    for cc in &buf[..read_size] {
-        if *cc == b'\n' {
-            lines.push(linebuf);
-            linebuf = String::new();
-        } else {
-            linebuf.push(*cc as char);
-        }
+    for ll in f.lines() {
+        lines_vec.push(ll.unwrap());
     }
-    println!("{:?}", lines);
 
+    println!("{:?}", lines_vec);
     Ok(())
 }
