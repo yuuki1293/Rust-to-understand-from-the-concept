@@ -1,11 +1,9 @@
-fn fact(n: u32) -> u32 {
-    if n == 0 {
-        1
-    } else {
-        n * fact(n - 1)
-    }
+fn func_of_func(b: i32) -> impl Fn(i32) -> i32 {
+    move |x| x + b
 }
 
 fn main() {
-    println!("{}", fact(3));
+    let add_2 = func_of_func(2);
+    println!("{}", add_2(1));
+    println!("{}", add_2(4));
 }
