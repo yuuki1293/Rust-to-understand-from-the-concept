@@ -1,9 +1,10 @@
-fn func_of_func(b: i32) -> impl Fn(i32) -> i32 {
-    move |x| x + b
-}
+use std::thread::spawn;
 
 fn main() {
-    let add_2 = func_of_func(2);
-    println!("{}", add_2(1));
-    println!("{}", add_2(4));
+    let mut v_threads = Vec::new();
+    for i in 0..10 {
+        let thread = spawn(move || println!("{}", i));
+        v_threads.push(thread);
+    }
+    let _x: Vec<()> = v_threads.into_iter().map(|th| th.join().unwrap()).collect();
 }
