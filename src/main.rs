@@ -5,6 +5,13 @@ async fn sum_func(n: usize) -> usize {
 }
 
 fn main() {
-    sum_func(10000000);
-    println!("called")
+    let ls = tokio::task::LocalSet::new();
+    let rt = tokio::runtime::Builder::new_multi_thread()
+        .enable_all()
+        .build()
+        .unwrap();
+    ls.block_on(&rt, async {
+        sum_func(10000000).await;
+        sum_func(20000000).await;
+    });
 }
