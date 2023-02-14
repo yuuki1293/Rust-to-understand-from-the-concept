@@ -6,7 +6,7 @@ fn main() {
 
     let added = vec![1, 2, 3, 4, 5];
 
-    let mut thrd = Vec::new(Vec::new());
+    let mut thrd = Arc::new(Vec::new());
     for aa in added {
         let data = Arc::clone(&data);
         let th = spawn(move || {
