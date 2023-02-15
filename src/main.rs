@@ -1,46 +1,19 @@
-#[link(name = "z")]
-extern "C" {
-    fn compress(dest: *mut u8, destlen: *mut usize, src: *const u8, srclen: usize) -> i32;
-    fn uncompress(dest: *mut u8, destlen: *mut usize, src: *const u8, srclen: usize) -> i32;
+#[repr(C)]
+struct Point {
+    x: f64,
+    y: f64,
 }
 
-const BUFSIZE: usize = 1024;
+extern "C" {
+    fn distance(a: Point, b: Point) -> f64;
+}
 
 fn main() {
-    let mut compressed_buf = [0_u8; BUFSIZE];
-    let mut uncompressed_buf = [0_u8; BUFSIZE];
-
-    let orgdata = "Hello, Hello, Hello, world!!!";
-    let orgdata_size = orgdata.len();
-
-    let mut destlen_comp = BUFSIZE;
-    let mut destlen_uncomp = BUFSIZE;
-
-    println!("orgdata: {}", orgdata);
-    unsafe {
-        let ret_comp = compress(
-            compressed_buf.as_mut_ptr(),
-            &mut destlen_comp as *mut usize,
-            orgdata.as_ptr(),
-            orgdata_size,
-        );
-        println!("ret_comp = {}", ret_comp);
-    }
-    println!("destlen_comp = {}", destlen_comp);
-    println!();
+    let a = Point { x: 1.0, y: 2.0 };
+    let b = Point { x: 4.0, y: 6.0 };
 
     unsafe {
-        let ret_uncomp = uncompress(
-            uncompressed_buf.as_mut_ptr(),
-            &mut destlen_uncomp as *mut usize,
-            compressed_buf.as_ptr(),
-            destlen_comp,
-        );
-        println!("ret_ucomp = {}", ret_uncomp);
+        let dist = distance(a, b);
+        println!("distance={}", dist);
     }
-    println!("destlen_ucomp = {}", destlen_uncomp);
-    println!(
-        "ucompressed: {}",
-        String::from_utf8(uncompressed_buf[..destlen_uncomp].to_vec()).unwrap()
-    )
 }
