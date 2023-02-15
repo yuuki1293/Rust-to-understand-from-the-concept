@@ -1,51 +1,46 @@
-use std::io;
-use std::error::Error;
-use tokio::io::AsyncWriteExt;
-use tokio::net::{TcpListener, TcpStream};
-
-async fn echo_process(stream: &mut TcpStream) -> Result<(), Box<dyn Error>> {
-    let mut buf = Vec::with_capacity(1024);
-    let mut input_prompt = true;
-    loop {
-        if input_prompt{
-            stream.write("input => ".as_bytes()).await?;
-        }
-        let read = stream.try_read_buf(&mut buf);
-        match read {
-            Ok(0) => break,
-            Ok(n) => {
-                stream.write("output => ".as_bytes()).await?;
-                stream.write_all(&buf[..n]).await?;
-                input_prompt = true;
-            }
-            Err(ref e) if e.kind() == io::ErrorKind::WouldBlock=>{
-                input_prompt =false;
-                continue;
-            }
-            Err(e)=>{
-                return Err(e.into())
-            }
-        }
-        buf.clear();
-    }
-    Ok(())
+#[link(name = "z")]
+extern "C" {
+    fn compress(dest: *mut u8, destlen: *mut usize, src: *const u8, srclen: usize) -> i32;
+    fn uncompress(dest: *mut u8, destlen: *mut usize, src: *const u8, srclen: usize) -> i32;
 }
 
-#[tokio::main]
-async fn main(){
-    let args: Vec<String> = std::env::args().collect();
-    if args.len() != 2{
-        panic!("port is not specified");
-    }
-    let port: usize = args[1].parse().expect("Failed to get the port number");
-    let addr = format!("localhost:{}", port);
-    let listner = TcpListener::bind(addr).await.unwrap();
-    println!("Listening to the port {}", port);
+const BUFSIZE: usize = 1024;
 
-    loop {
-        let (mut stream, _) = listner.accept().await.unwrap();
-        tokio::spawn(async move{
-            echo_process(&mut stream).await.unwrap();
-        });
+fn main() {
+    let mut compressed_buf = [0_u8; BUFSIZE];
+    let mut uncompressed_buf = [0_u8; BUFSIZE];
+
+    let orgdata = "Hello, Hello, Hello, world!!!";
+    let orgdata_size = orgdata.len();
+
+    let mut destlen_comp = BUFSIZE;
+    let mut destlen_uncomp = BUFSIZE;
+
+    println!("orgdata: {}", orgdata);
+    unsafe {
+        let ret_comp = compress(
+            compressed_buf.as_mut_ptr(),
+            &mut destlen_comp as *mut usize,
+            orgdata.as_ptr(),
+            orgdata_size,
+        );
+        println!("ret_comp = {}", ret_comp);
     }
+    println!("destlen_comp = {}", destlen_comp);
+    println!();
+
+    unsafe {
+        let ret_uncomp = uncompress(
+            uncompressed_buf.as_mut_ptr(),
+            &mut destlen_uncomp as *mut usize,
+            compressed_buf.as_ptr(),
+            destlen_comp,
+        );
+        println!("ret_ucomp = {}", ret_uncomp);
+    }
+    println!("destlen_ucomp = {}", destlen_uncomp);
+    println!(
+        "ucompressed: {}",
+        String::from_utf8(uncompressed_buf[..destlen_uncomp].to_vec()).unwrap()
+    )
 }
